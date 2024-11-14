@@ -21,6 +21,49 @@
         ref="gameRef"
       />
     </div>
+    <template>
+  <div class="game-container">
+    <h1>贪吃蛇游戏</h1>
+    <div class="score-board">
+      <div class="score">当前分数：{{ score }}</div>
+      <div class="high-score">最高分数：{{ highScore }}</div>
+    </div>
+    <div class="game-board" ref="gameBoard">
+      <GameBoard 
+        @score-change="updateScore" 
+        @high-score-change="updateHighScore"
+        ref="gameRef"
+      />
+    </div>
+
+    <!-- 在这里添加移动端控制按钮 -->
+    <div class="mobile-controls">
+      <div class="control-row">
+        <button @click="handleDirection('ArrowUp')" class="direction-btn up">↑</button>
+      </div>
+      <div class="control-row">
+        <button @click="handleDirection('ArrowLeft')" class="direction-btn">←</button>
+        <button @click="handleDirection('ArrowDown')" class="direction-btn">↓</button>
+        <button @click="handleDirection('ArrowRight')" class="direction-btn">→</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button @click="toggleGame" class="control-btn">
+        {{ isPlaying ? '暂停' : '开始' }}
+      </button>
+    </div>
+    <div class="instructions">
+      <h2>游戏说明：</h2>
+      <ul>
+        <li>使用键盘方向键 ↑↓←→ 或屏幕按钮控制蛇的移动</li>
+        <li>吃到食物（橙色方块）可得10分</li>
+        <li>撞到墙壁或自己会结束游戏</li>
+        <li>按空格键可以快速暂停/开始游戏</li>
+      </ul>
+    </div>
+  </div>
+</template>
     <div class="controls">
       <button @click="toggleGame" class="control-btn">
         {{ isPlaying ? '暂停' : '开始' }}
@@ -41,7 +84,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+// 1. 修改这行，添加 onMounted
+import { ref, onMounted } from 'vue'  // 在这里添加
 import GameBoard from './components/GameBoard.vue'
 
 const score = ref(0)
@@ -50,6 +94,12 @@ const isPlaying = ref(false)
 const gameRef = ref()
 const difficulty = ref('medium') // 默认中等难度
 
+// 2. 在这里添加新的函数（在其他 const 定义之后）
+const handleDirection = (direction: string) => {
+  if (gameRef.value) {
+    gameRef.value.handleKeyPress({ key: direction })
+  }
+}
 const updateScore = (newScore: number) => {
   score.value = newScore
   if (newScore > highScore.value) {

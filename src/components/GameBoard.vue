@@ -217,7 +217,8 @@ function handleKeyPress(event: KeyboardEvent) {
 defineExpose({
   startGame,
   pauseGame,
-  setDifficulty
+  setDifficulty,
+  handleKeyPress  // 添加这一行
 })
 </script>
 
